@@ -1,12 +1,16 @@
 import express from 'express';
 import { Request, Response } from 'express';
 
-import { getData } from 'src/controllers/data';
+import { allSources, getData } from 'src/controllers/data';
 
 const router = express.Router();
 
-router.get('/', (req: Request, res: Response) => {
-  console.log(req.params);
+router.get('/', async (req: Request<{}, {}, {}, DataRequestQuery>, res: Response) => {
+  const { sources } = req.query;
+  const sourcesArray: string[] = sources ? sources.split(',') : allSources; 
+  const data = await getData(sourcesArray);
+  console.log(data);
+  res.json(data);
 });
 
 export default router;
